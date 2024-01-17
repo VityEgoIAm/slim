@@ -1,0 +1,33 @@
+version: '3.7'
+
+volumes:
+    logs:
+        driver: local
+    db-data:
+        driver: local
+
+services:
+    slim:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: slim-php
+        command: php -S 0.0.0.0:8080 -t public
+        environment:
+            docker: "true"
+        ports:
+            - 8080:8080
+        volumes:
+            - .:/var/www
+            - logs:/var/www/logs
+    postgres:
+        image: postgres:14.10-alpine
+        container_name: slim-postgres
+        environment:
+            POSTGRES_USER: slim
+            POSTGRES_PASSWORD: slim
+            POSTGRES_DB: slim
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        ports:
+            - 5432:5432
