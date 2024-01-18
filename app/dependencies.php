@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use App\Application\Settings\SettingsInterface;
+use App\Domain\Service\GeocoderInterface;
+use App\Domain\Service\YandexGeocoder;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -38,6 +40,9 @@ return function (ContainerBuilder $containerBuilder) {
             $password = $dbSettings['password'];
             $dsn = "$adapter:host=$host;dbname=$dbname";
             return new PDO($dsn, $username, $password);
+        },
+        GeocoderInterface::class => function () {
+            return new YandexGeocoder();
         },
     ]);
 };
